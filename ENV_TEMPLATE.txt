@@ -1,0 +1,50 @@
+# Copy this file to .env and fill in your values
+
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+
+# Supabase Configuration
+# Get these from: Supabase Dashboard → Settings → API
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_ANON_KEY=your_supabase_anon_key_here
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key_here
+
+# JWT Configuration
+# Generate a random string: openssl rand -base64 32
+JWT_SECRET=your_jwt_secret_key_here_make_it_long_and_random
+JWT_EXPIRE=7d
+
+# Twilio Configuration (Optional - for SMS/OTP)
+TWILIO_ACCOUNT_SID=your_twilio_account_sid
+TWILIO_AUTH_TOKEN=your_twilio_auth_token
+TWILIO_PHONE_NUMBER=your_twilio_phone_number
+
+# Email Configuration (Optional - for emails)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_email_password
+EMAIL_FROM=noreply@estato.com
+
+# Razorpay Configuration (Optional - for payments)
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+
+# CORS Configuration
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8080
+
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# OTP Configuration
+OTP_EXPIRE_MINUTES=10
+OTP_LENGTH=6
+
+# App Configuration
+APP_NAME=Estato
+APP_URL=http://localhost:3000
+SUPPORT_EMAIL=support@estato.com
+SUPPORT_PHONE=+919876543210
+
