@@ -6,17 +6,52 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
-// Import routes
-const authRoutes = require('./routes/auth');
-const otpRoutes = require('./routes/otp');
-const userRoutes = require('./routes/users');
-const propertyRoutes = require('./routes/properties');
-const favoriteRoutes = require('./routes/favorites');
-const chatRoutes = require('./routes/chats');
-const bookingRoutes = require('./routes/bookings');
-const paymentRoutes = require('./routes/payments');
-const adminRoutes = require('./routes/admin');
-const notificationRoutes = require('./routes/notifications');
+// Check for required environment variables before importing routes
+const requiredEnvVars = ['SUPABASE_URL', 'SUPABASE_ANON_KEY'];
+const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingEnvVars.length > 0) {
+  console.error('❌ Missing required environment variables!');
+  console.error(`Missing: ${missingEnvVars.join(', ')}`);
+  console.error('');
+  console.error('📝 To fix this:');
+  console.error('   1. Go to Render Dashboard → Your Service → Environment Tab');
+  console.error('   2. Add the following environment variables:');
+  console.error('      - PORT=10000');
+  console.error('      - NODE_ENV=production');
+  console.error('      - SUPABASE_URL');
+  console.error('      - SUPABASE_ANON_KEY');
+  console.error('      - SUPABASE_SERVICE_ROLE_KEY');
+  console.error('      - JWT_SECRET');
+  console.error('      - ALLOWED_ORIGINS');
+  console.error('   3. Save changes and redeploy');
+  console.error('');
+  console.error('See: backend/RENDER_ENV_COPY_PASTE.md for detailed instructions');
+  process.exit(1);
+}
+
+// Import routes (only after env vars are verified)
+let authRoutes, otpRoutes, userRoutes, propertyRoutes, favoriteRoutes;
+let chatRoutes, bookingRoutes, paymentRoutes, adminRoutes, notificationRoutes;
+
+try {
+  authRoutes = require('./routes/auth');
+  otpRoutes = require('./routes/otp');
+  userRoutes = require('./routes/users');
+  propertyRoutes = require('./routes/properties');
+  favoriteRoutes = require('./routes/favorites');
+  chatRoutes = require('./routes/chats');
+  bookingRoutes = require('./routes/bookings');
+  paymentRoutes = require('./routes/payments');
+  adminRoutes = require('./routes/admin');
+  notificationRoutes = require('./routes/notifications');
+} catch (error) {
+  console.error('❌ Error loading routes:', error.message);
+  console.error('');
+  console.error('This is likely due to missing environment variables.');
+  console.error('Please check Render Dashboard → Environment Variables.');
+  process.exit(1);
+}
 
 // Initialize Express app
 const app = express();
@@ -107,12 +142,19 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Estato API Server running on port ${PORT}`);
-  console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/health`);
-});
+// Start server with error handling
+try {
+  app.listen(PORT, () => {
+    console.log(`🚀 Estato API Server running on port ${PORT}`);
+    console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+    console.log(`✅ Server started successfully!`);
+  });
+} catch (error) {
+  console.error('❌ Failed to start server:', error.message);
+  console.error('Stack trace:', error.stack);
+  process.exit(1);
+}
 
 module.exports = app;
 
